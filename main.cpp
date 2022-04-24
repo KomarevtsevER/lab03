@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <string.h>
 #include <vector>
+#include "histogram.h"
 #include<windows.h>
 #pragma hdrstop
 using namespace std;
@@ -22,33 +23,18 @@ input_numbers(size_t count)
     return result;
 }
 
-void
-find_minmax(const vector<double> &numbers, double& min, double& max)
-{
-    min = numbers[0];
-    max = numbers[0];
-    for (double number : numbers)
-    {
-        if (number < min)
-        {
-            min = number;
-        }
-        if (number > max)
-        {
-            max = number;
-        }
-    }
-}
-
 vector<size_t>
-make_histogram(const vector<double> &numbers, const size_t &bin_count){
+make_histogram(const vector<double> &numbers, const size_t &bin_count)
+{
 
     double min, max;
     find_minmax(numbers, min, max);
     vector<size_t> bins(bin_count, 0);
-    for (double number : numbers) {
+    for (double number : numbers)
+    {
         size_t bin = (size_t)(((number - min) / (max - min)) * bin_count);
-        if (bin == bin_count) {
+        if (bin == bin_count)
+        {
             bin--;
         }
         bins[bin]++;
@@ -57,8 +43,9 @@ make_histogram(const vector<double> &numbers, const size_t &bin_count){
 }
 
 void
-show_histogram( const auto& bins){
-const size_t SCREEN_WIDTH = 80;
+show_histogram( const auto& bins)
+{
+    const size_t SCREEN_WIDTH = 80;
     const size_t MAX_ASTERISK = SCREEN_WIDTH - 4 - 1;
 
     size_t max_count = 0;
@@ -100,7 +87,8 @@ const size_t SCREEN_WIDTH = 80;
 }
 
 void
-svg_begin(double width, double height) {
+svg_begin(double width, double height)
+{
     cout << "<?xml version='1.0' encoding='UTF-8'?>\n";
     cout << "<svg ";
     cout << "width='" << width << "' ";
@@ -110,7 +98,8 @@ svg_begin(double width, double height) {
 }
 
 void
-svg_end() {
+svg_end()
+{
     cout << "</svg>\n";
 }
 
@@ -120,7 +109,8 @@ svg_text(double left, double baseline, string text)
     cout << "<text x='" << left << "' y='"<< baseline << "'>"<< text <<"</text>" <<endl;
 }
 
-void svg_rect(double x, double y, double width, double height,string stroke, string fill){
+void svg_rect(double x, double y, double width, double height,string stroke, string fill)
+{
 
     cout<<"<rect x='" << x <<"' y='"<< y <<"' width='"<< width <<"' height='"<< height <<"' stroke='"<<stroke<<"' fill='"<<fill<<"' />" <<endl;
 }
