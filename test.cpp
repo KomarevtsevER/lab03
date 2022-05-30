@@ -1,5 +1,5 @@
 #include "histogram.h"
-
+#include "SVG.h"
 #include <cassert>
 
 void
@@ -47,6 +47,21 @@ test_pustoi() {
     assert(max == 0);
 }
 
+void
+test_1() {
+vector<double> numbers = {1, 3, 1, 3};
+size_t bin_count = 2;
+vector <double> otvet = {1, 1};
+assert(bin_size (numbers, bin_count)==otvet);
+}
+
+void
+test_2() {
+vector<double> numbers = {1};
+size_t bin_count = 1;
+vector <double> otvet = {0, 1};
+assert(bin_size (numbers, bin_count)==otvet);
+}
 
 int
 main() {
@@ -55,4 +70,6 @@ main() {
     test_similar();
     test_one();
     test_pustoi();
+    test_1();
+    test_2();
 }
