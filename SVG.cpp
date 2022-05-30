@@ -1,14 +1,6 @@
 #include "SVG.h"
 #include "histogram.h"
 
-vector <double>
-bin_size(const vector<double> &numbers, const size_t &bin_count){
-    double max, min;
-    find_minmax (numbers, min, max);
-    vector <double> bin = {(max - min)/ bin_count, min};
-    return bin;
-}
-
 void
 svg_begin(double width, double height)
 {
@@ -40,30 +32,35 @@ void svg_rect(double x, double y, double width, double height,string stroke, str
 
 
 void
-show_histogram_svg(const vector<size_t>& bins,const vector<double>& bin_size)
+show_histogram_svg(const vector<size_t>& bins)
 {
     const auto IMAGE_WIDTH = 400;
     const auto IMAGE_HEIGHT = 300;
-    const auto TEXT_LEFT = 20+20;
+    const auto TEXT_LEFT = 20;
     const auto TEXT_BASELINE = 20;
-    const auto TEXT_WIDTH = 50+20;
+    const auto TEXT_WIDTH = 50;
     const auto BIN_HEIGHT = 30;
     const auto BLOCK_WIDTH = 10;
+    const auto MAX_ASTERISK = IMAGE_WIDTH - TEXT_WIDTH;
+     size_t max_count = 0;
+    for (size_t bin : bins) {
+        if (bin * BLOCK_WIDTH > max_count) {
+                 max_count = bin * BLOCK_WIDTH;
+        }
+    }
+    const bool scaling_needed = max_count > MAX_ASTERISK;
     svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
     double top = 0;
-    for (size_t i=0; i<bins.size(); i++)
-    {
-        size_t bin=bins[i];
-        const double bin_width = BLOCK_WIDTH * bin;
-        const double text_wid= IMAGE_WIDTH-bin_width-30;
-        if( i > 0){
-            svg_text(TEXT_LEFT-20, top + TEXT_BASELINE, to_string(bin_size[1] + bin_size[0]*i));
-            top+=BIN_HEIGHT;
+    for (size_t bin : bins) {
+        size_t bin_scale = bin;
+        if (scaling_needed) {
+            const double scaling_factor = (double)MAX_ASTERISK / max_count;
+            bin_scale = (size_t)(bin * scaling_factor);
         }
+        const double bin_width = BLOCK_WIDTH * bin_scale;
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, to_string(bin));
         svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT);
         top += BIN_HEIGHT;
     }
-    svg_text(TEXT_LEFT, TEXT_BASELINE, to_string(bins[0]));
     svg_end();
 }
