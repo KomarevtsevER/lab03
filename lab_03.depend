@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1653909614 source:d:\labs_po\lab_03\main.cpp
+1653917425 source:d:\labs_po\lab_03\main.cpp
 	<iostream>
 	<math.h>
 	<conio.h>
@@ -8,6 +8,7 @@
 	"histogram.h"
 	"SVG.h"
 	<windows.h>
+	<curl/curl.h>
 
 1653909569 d:\labs_po\lab_03\histogram.h
 	<vector>
@@ -23,4 +24,48 @@
 1653912262 source:d:\labs_po\lab_03\svg.cpp
 	"SVG.h"
 	"histogram.h"
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\curl.h
+	"curlver.h"
+	"system.h"
+	<stdio.h>
+	<limits.h>
+	<osreldate.h>
+	<sys/types.h>
+	<time.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sys/select.h>
+	<sys/socket.h>
+	<sys/time.h>
+	"easy.h"
+	"multi.h"
+	"urlapi.h"
+	"options.h"
+	"header.h"
+	"typecheck-gcc.h"
+
+1652239120 d:\labs_po\lab_03\curl\include\curl\curlver.h
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\system.h
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/poll.h>
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\easy.h
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\multi.h
+	"curl.h"
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\urlapi.h
+	"curl.h"
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\options.h
+
+1652076210 d:\labs_po\lab_03\curl\include\curl\header.h
+
+1652071940 d:\labs_po\lab_03\curl\include\curl\typecheck-gcc.h
 
