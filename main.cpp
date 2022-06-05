@@ -1,3 +1,5 @@
+#include <sstream>
+#include <string>
 #include <iostream>
 #include <math.h>
 #include <conio.h>
@@ -9,6 +11,15 @@
 #pragma hdrstop
 #include <curl/curl.h>
 using namespace std;
+
+size_t
+write_data(void* items, size_t item_size, size_t item_count, void* ctx)
+{
+    size_t data_size = item_size * item_count;
+    stringstream* buffer = reinterpret_cast<stringstream*>(ctx);
+    buffer->write(reinterpret_cast<const char*>(items), data_size);
+    return data_size;
+}
 
 vector<double>
 input_numbers(istream& in, size_t count)
@@ -22,7 +33,8 @@ input_numbers(istream& in, size_t count)
 }
 
 Input
-read_input(istream& in, bool prompt) {
+read_input(istream& in, bool prompt)
+{
     Input data;
 
     if (prompt)
@@ -42,12 +54,14 @@ read_input(istream& in, bool prompt) {
 }
 
 vector<size_t>
-make_histogram(Input data){
+make_histogram(Input data)
+{
 
     double min, max;
-   find_minmax(data.numbers, min, max);
+    find_minmax(data.numbers, min, max);
     vector<size_t> bins(data.bin_count, 0);
-    for (double number : data.numbers) {
+    for (double number : data.numbers)
+    {
         size_t bin = (size_t)(((number - min) / (max - min)) * data.bin_count);
         if (bin == data.bin_count)
         {
@@ -102,32 +116,66 @@ show_histogram( const auto& bins)
     }
 }
 
-
-
-int main(int argc, char* argv[]) {
-    if (argc > 1){
-        CURL* curl = curl_easy_init();
-        if(curl){
-            CURLcode res;
-            curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-            res = curl_easy_perform(curl);
-            if(res){
-                cerr<<" Error text  = "<<curl_easy_strerror(res);
-                exit(1);
-            }
-            curl_easy_cleanup(curl);
+Input
+download(const string& address)
+{
+    curl_global_init(CURL_GLOBAL_ALL);
+    stringstream buffer;
+    CURL* curl = curl_easy_init();
+    if(curl)
+    {
+        CURLcode res;
+        curl_easy_setopt(curl, CURLOPT_URL, address.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        if(res != CURLE_OK)
+        {
+            cerr<<" Error text  = "<<curl_easy_strerror(res);
+            exit(1);
         }
-        return 0;
+
+        return read_input(buffer, false);
     }
 
-    curl_global_init(CURL_GLOBAL_ALL);
-    // Ввод данных
-    const auto input = read_input(cin, true);
-    // Обработка данных
-
-    const auto bins = make_histogram(input);
-
-    // Вывод данных
-    show_histogram_svg(bins);
-    return 0;
 }
+    int main(int argc, char* argv[])
+    {
+        size_t ncolor;
+        for(size_t i =0; i<argc ; i++){
+            if (strstr(argv[i], "-fill")){
+                ncolor=i+1;
+                if((argc - ncolor) < 2 ){
+                    cerr<<" No color";
+                    return 0;
+                }
+                break;
+            }
+        }
+        string color = argv[ncolor];
+        Input input;
+        if (argc > 1)
+        {
+            size_t index;
+            if(ncolor==2){
+                    index=3;
+            }
+            else{
+                index=1;
+            }
+            input = download(argv[index]);
+        }
+        else
+        {
+            input = read_input(cin, true);
+        }
+
+        // Обработка данных
+
+        const auto bins = make_histogram(input);
+
+        // Вывод данных
+        show_histogram_svg(bins, color);
+        return 0;
+    }
