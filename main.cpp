@@ -1,9 +1,6 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include <math.h>
-#include <conio.h>
-#include <string.h>
 #include <vector>
 #include "histogram.h"
 #include "SVG.h"
@@ -69,47 +66,34 @@ make_histogram(Input data)
         }
         bins[bin]++;
     }
-    return bins;
+    return(bins);
 }
 
 void
-show_histogram( const auto& bins)
-{
+show_histogram_text(const vector <size_t> &bins){
     const size_t SCREEN_WIDTH = 80;
     const size_t MAX_ASTERISK = SCREEN_WIDTH - 4 - 1;
-
     size_t max_count = 0;
-    for (size_t count : bins)
-    {
-        if (count > max_count)
-        {
-            max_count = count;
+    for (size_t bin : bins) {
+        if (bin > max_count) {
+            max_count = bin;
         }
     }
     const bool scaling_needed = max_count > MAX_ASTERISK;
-
-    for (size_t bin : bins)
-    {
-        if (bin < 100)
-        {
+    for (size_t bin : bins) {
+        if (bin < 100) {
             cout << ' ';
         }
-        if (bin < 10)
-        {
+        if (bin < 10) {
             cout << ' ';
         }
         cout << bin << "|";
-
         size_t height = bin;
-        if (scaling_needed)
-        {
+        if (scaling_needed) {
             const double scaling_factor = (double)MAX_ASTERISK / max_count;
             height = (size_t)(bin * scaling_factor);
         }
-
-        for (size_t i = 0; i < height; i++)
-
-        {
+        for (size_t i = 0; i < height; i++) {
             cout << '*';
         }
         cout << '\n';
@@ -138,7 +122,6 @@ download(const string& address)
 
         return read_input(buffer, false);
     }
-
 }
     int main(int argc, char* argv[])
     {
