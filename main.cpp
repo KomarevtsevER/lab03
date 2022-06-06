@@ -1,3 +1,4 @@
+#define INFO_BUFFER_SIZE 20
 #include <iostream>
 #include <vector>
 #include "histogram.h"
@@ -57,6 +58,7 @@ show_histogram_text(const vector <size_t> &bins){
     }
 }
 
+
 int
 main() {
     DWORD info = GetVersion();
@@ -69,8 +71,12 @@ main() {
 
      if ((info & 0x40000000) == 0) {
         DWORD build = platform;
-        printf(" (build %u)", build);
+        printf(" (build %u)\n", build);
     }
+    char  infoBuf[INFO_BUFFER_SIZE];
+    DWORD  bufCharCount = INFO_BUFFER_SIZE;
+    GetComputerNameA(infoBuf, &bufCharCount);
+    printf("Computer name: %s", infoBuf);
     return 0;
 
     // ¬вод данных
